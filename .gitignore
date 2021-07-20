@@ -13,3 +13,5 @@
 *.so
 *.o
 *.a
+/.idea/
+/cmake-build-*/
