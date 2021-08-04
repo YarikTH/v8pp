@@ -293,6 +293,27 @@ public:
 				v8::PropertyAttribute(v8::DontDelete | (setter? 0 : v8::ReadOnly)));
 		return *this;
 	}
+ 
+	/// Set const class member data
+	template<typename Attribute>
+	typename std::enable_if<
+		std::is_member_object_pointer<Attribute>::value, class_&>::type
+	set_const(char const *name, Attribute attribute)
+	{
+		v8::HandleScope scope(isolate());
+
+		using attribute_type = typename
+			detail::function_traits<Attribute>::template pointer_type<T>;
+		attribute_type attr(attribute);
+		v8::AccessorGetterCallback getter = &member_get<attribute_type>;
+
+		class_info_.class_function_template()->PrototypeTemplate()
+			->SetAccessor(v8pp::to_v8(isolate(), name), getter, nullptr,
+				detail::external_data::set(isolate(), std::forward<attribute_type>(attr)),
+				v8::DEFAULT,
+				v8::PropertyAttribute(v8::DontDelete | v8::ReadOnly));
+		return *this;
+	}
 
 	/// Set read/write class property with getter and setter
 	template<typename GetMethod, typename SetMethod>
@@ -324,7 +345,9 @@ public:
 
 	/// Set value as a read-only property
 	template<typename Value>
-	class_& set_const(char const* name, Value const& value)
+	typename std::enable_if<
+		!std::is_member_object_pointer<Value>::value, class_&>::type
+	set_const(char const* name, Value const& value)
 	{
 		v8::HandleScope scope(isolate());
 
