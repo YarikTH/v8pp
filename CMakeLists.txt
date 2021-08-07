@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
+# using file(CREATE_LINK) that was added in 3.14
 
 # Get version from config.hpp
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/v8pp/config.hpp config_hpp)
