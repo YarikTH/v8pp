@@ -36,6 +36,7 @@ if(V8PP_WARNING)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         list(APPEND V8PP_WARNING_OPTIONS "-Wall")
         list(APPEND V8PP_WARNING_OPTIONS "-Wextra")
+        list(APPEND V8PP_WARNING_OPTIONS "-Wno-unused-function")
     elseif(
         CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
         OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"
