@@ -197,9 +197,13 @@ void forward_function(v8::FunctionCallbackInfo<v8::Value> const& args)
 	{
 		forward_ret<Traits, F>(args, is_void_return<F>());
 	}
+	catch (std::invalid_argument const& ex)
+	{
+		args.GetReturnValue().Set(throw_ex(isolate, ex.what(), &v8::Exception::TypeError));
+	}
 	catch (std::exception const& ex)
 	{
-		args.GetReturnValue().Set(throw_ex(isolate, ex.what()));
+		args.GetReturnValue().Set(throw_ex(isolate, ex.what(), &v8::Exception::Error));
 	}
 }
 
