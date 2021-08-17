@@ -71,7 +71,10 @@ struct call_from_v8_traits
 	{
 		if (args.Length() != arg_count)
 		{
-			throw std::runtime_error("argument count does not match function definition");
+			throw std::invalid_argument(std::string("argument count does not match function definition: expected ")
+				+ std::to_string(arg_count)
+				+ ", but got "
+				+ std::to_string(args.Length()));
 		}
 	}
 };
